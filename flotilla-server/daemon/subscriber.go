@@ -52,7 +52,7 @@ func (s *subscriber) start() {
 		}
 
 		then, _ := binary.Varint(message)
-		latencies.RecordValue((now - then) / 1000000)
+		latencies.RecordValue((now - then) / 1000)
 
 		if !s.hasStarted {
 			s.hasStarted = true
