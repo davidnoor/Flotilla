@@ -46,13 +46,14 @@ const (
 )
 
 type request struct {
-	Operation   operation `json:"operation"`
-	Broker      string    `json:"broker"`
-	Port        string    `json:"port"`
-	NumMessages int       `json:"num_messages"`
-	MessageSize int64     `json:"message_size"`
-	Count       int       `json:"count"`
-	Host        string    `json:"host"`
+	Operation    operation `json:"operation"`
+	Broker       string    `json:"broker"`
+	Port         string    `json:"port"`
+	NumMessages  int       `json:"num_messages"`
+	MessageSize  int64     `json:"message_size"`
+	Count        int       `json:"count"`
+	Host         string    `json:"host"`
+	DockerExtras string    `json:"docker_extras"`
 }
 
 type response struct {
@@ -183,7 +184,7 @@ func (d *Daemon) processRequest(req request) response {
 	)
 	switch req.Operation {
 	case start:
-		response.Result, err = d.processBrokerStart(req.Broker, req.Host, req.Port)
+		response.Result, err = d.processBrokerStart(req.Broker, req.Host, req.Port, req.DockerExtras)
 	case stop:
 		response.Result, err = d.processBrokerStop()
 	case pub:
@@ -212,7 +213,7 @@ func (d *Daemon) processRequest(req request) response {
 
 	return response
 }
-func (d *Daemon) processBrokerStart(broker, host, port string) (interface{}, error) {
+func (d *Daemon) processBrokerStart(broker, host, port, dockerExtras string) (interface{}, error) {
 	if d.broker != nil {
 		return "", errors.New("Broker already running")
 	}
@@ -229,7 +230,9 @@ func (d *Daemon) processBrokerStart(broker, host, port string) (interface{}, err
 	case ActiveMQ:
 		d.broker = &activemq.Broker{}
 	case RabbitMQ:
-		d.broker = &rabbitmq.Broker{}
+		d.broker = &rabbitmq.Broker{
+			DockerExtras: dockerExtras,
+		}
 	case NSQ:
 		d.broker = &nsq.Broker{}
 	case CloudPubSub:

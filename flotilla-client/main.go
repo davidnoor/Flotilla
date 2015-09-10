@@ -51,6 +51,7 @@ func main() {
 		messageSize   = flag.Uint64("message-size", defaultMessageSize, "size of each message in bytes")
 		startupSleep  = flag.Uint("startup-sleep", defaultStartupSleep, "seconds to wait after broker start before benchmarking")
 		daemonTimeout = flag.Uint("daemon-timeout", defaultDaemonTimeout, "seconds to wait for daemon before timing out")
+		dockerExtras  = flag.String("docker-extra", "", "extra args to pass to `docker run'")
 	)
 	flag.Parse()
 
@@ -68,6 +69,7 @@ func main() {
 		Subscribers:   *consumers,
 		StartupSleep:  *startupSleep,
 		DaemonTimeout: *daemonTimeout,
+		DockerExtras:  *dockerExtras,
 	})
 	if err != nil {
 		fmt.Println("Failed to connect to flotilla:", err)

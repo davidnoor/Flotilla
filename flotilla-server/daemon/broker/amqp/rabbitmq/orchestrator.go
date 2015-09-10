@@ -13,13 +13,15 @@ const (
 
 // Broker implements the Broker interface for RabbitMQ.
 type Broker struct {
-	containerID string
+	containerID  string
+	DockerExtras string
 }
 
 // Start will start the message broker and prepare it for testing.
 func (r *Broker) Start(host, port string) (interface{}, error) {
+	//log.Printf("DOCKER RUN with args [%s]", r.DockerExtras)
 	containerID, err := exec.Command("/bin/sh", "-c",
-		fmt.Sprintf("docker run -d -p %s:%s %s", port, internalPort, rabbitMQ)).Output()
+		fmt.Sprintf("docker run %s -d -p %s:%s %s", r.DockerExtras, port, internalPort, rabbitMQ)).Output()
 	if err != nil {
 		log.Printf("Failed to start container %s: %s", rabbitMQ, err.Error())
 		return "", err

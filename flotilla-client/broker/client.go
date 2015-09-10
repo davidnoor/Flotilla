@@ -29,13 +29,14 @@ const (
 )
 
 type request struct {
-	Operation   operation `json:"operation"`
-	Broker      string    `json:"broker"`
-	Port        string    `json:"port"`
-	NumMessages uint      `json:"num_messages"`
-	MessageSize uint64    `json:"message_size"`
-	Count       uint      `json:"count"`
-	Host        string    `json:"host"`
+	Operation    operation `json:"operation"`
+	Broker       string    `json:"broker"`
+	Port         string    `json:"port"`
+	NumMessages  uint      `json:"num_messages"`
+	MessageSize  uint64    `json:"message_size"`
+	Count        uint      `json:"count"`
+	Host         string    `json:"host"`
+	DockerExtras string    `json:"docker_extras"`
 }
 
 type response struct {
@@ -59,6 +60,7 @@ type Benchmark struct {
 	Subscribers   uint
 	StartupSleep  uint
 	DaemonTimeout uint
+	DockerExtras  string
 }
 
 func (b *Benchmark) validate() error {
@@ -210,10 +212,11 @@ func (c *Client) Start() ([]*ResultContainer, error) {
 
 func (c *Client) startBroker() error {
 	resp, err := sendRequest(c.brokerd, request{
-		Operation: start,
-		Broker:    c.Benchmark.BrokerName,
-		Host:      c.Benchmark.BrokerHost,
-		Port:      c.Benchmark.BrokerPort,
+		Operation:    start,
+		Broker:       c.Benchmark.BrokerName,
+		Host:         c.Benchmark.BrokerHost,
+		Port:         c.Benchmark.BrokerPort,
+		DockerExtras: c.Benchmark.DockerExtras,
 	})
 
 	if err != nil {
