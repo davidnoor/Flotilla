@@ -10,6 +10,7 @@ import (
 	"github.com/gdamore/mangos/protocol/rep"
 	"github.com/gdamore/mangos/transport/tcp"
 	"github.com/tylertreat/Flotilla/flotilla-server/daemon/broker/activemq"
+	"github.com/tylertreat/Flotilla/flotilla-server/daemon/broker/amps"
 	"github.com/tylertreat/Flotilla/flotilla-server/daemon/broker/amqp"
 	"github.com/tylertreat/Flotilla/flotilla-server/daemon/broker/amqp/rabbitmq"
 	"github.com/tylertreat/Flotilla/flotilla-server/daemon/broker/beanstalkd"
@@ -43,6 +44,7 @@ const (
 	RabbitMQ    = "rabbitmq"
 	NSQ         = "nsq"
 	CloudPubSub = "pubsub"
+	AMPS        = "amps"
 )
 
 type request struct {
@@ -233,6 +235,10 @@ func (d *Daemon) processBrokerStart(broker, host, port, dockerExtras string) (in
 		d.broker = &rabbitmq.Broker{
 			DockerExtras: dockerExtras,
 		}
+	case AMPS:
+		d.broker = &amps.Broker{
+			DockerExtras: dockerExtras,
+		}
 	case NSQ:
 		d.broker = &nsq.Broker{}
 	case CloudPubSub:
@@ -362,6 +368,8 @@ func (d *Daemon) newPeer(broker, host string) (peer, error) {
 		return activemq.NewPeer(host)
 	case RabbitMQ:
 		return amqp.NewPeer(host)
+	case AMPS:
+		return amps.NewPeer(host)
 	case NSQ:
 		return nsq.NewPeer(host)
 	case CloudPubSub:

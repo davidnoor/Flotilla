@@ -25,7 +25,7 @@ const (
 	results          operation = "results"
 	teardown         operation = "teardown"
 	resultsSleep               = time.Second
-	sendRecvDeadline           = 5 * time.Second
+	sendRecvDeadline           = 20 * time.Second
 )
 
 type request struct {
