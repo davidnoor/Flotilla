@@ -35,14 +35,33 @@ Flotilla consists of two binaries: the server daemon and client. The daemon runs
 To install the daemon, run:
 
 ```bash
-$ go get github.com/tylertreat/flotilla/flotilla-server
+$ go get github.com/tylertreat/Flotilla/flotilla-server
 ```
 
 To install the client, run:
 
 ```bash
-$ go get github.com/tylertreat/flotilla/flotilla-client
+$ go get github.com/tylertreat/Flotilla/flotilla-client
 ```
+
+### Installing Forked Flotilla
+
+If you would like to use a fork of flotilla, you must first `go get` the code from `github.com/tylertreat/Flotilla` so that the local source code is installed to `tylertreat`, and then update
+the local git repo to point to a new remote.
+
+For example if my fork is `github.com/joe/Flotilla`:
+
+```
+$ go get github.com/tylertreat/Flotilla/flotilla-client
+$ go get github.com/tylertreat/Flotilla/flotilla-server
+$ cd src/github.com/tylertreat/Flotilla
+$ git add remote joe_fork git@github.com:joe/Flotilla 
+$ git fetch
+$ git checkout -b joe_master joe_fork/master
+```
+
+This sequence of commands adds a git remote for the fork, fetches the branch heads from the remote, and then
+creates and checks out a new `joe_master` branch which tracks `master` on my forked code.
 
 ## Usage
 
